@@ -1,5 +1,6 @@
 package com.vn.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,8 +16,13 @@ public class UserEntity {
     private String lastName;
     private String avatar;
     private String role;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+@JoinColumn(name = "fk_ud_id")
+    @JsonBackReference
     private UserDetailEntity userDetail;
-    @OneToMany(mappedBy = "user")
+//    @OneToMany(cascade = CascadeType.ALL)
+@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+@JoinColumn(name = "fk_ul_id", referencedColumnName = "id")
     private List<UserLikeEntity> reList;
 }

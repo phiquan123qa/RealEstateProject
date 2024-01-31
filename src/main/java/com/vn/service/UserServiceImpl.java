@@ -3,13 +3,13 @@ package com.vn.service;
 import com.vn.entity.UserDetailEntity;
 import com.vn.entity.UserEntity;
 import com.vn.model.User;
-import com.vn.model.UserDetail;
 import com.vn.repository.UserDetailRepository;
 import com.vn.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,10 +28,8 @@ public class UserServiceImpl implements UserService {
         UserDetailEntity userDetailEntity = new UserDetailEntity();
         BeanUtils.copyProperties(user.getUserDetail(), userDetailEntity);
         BeanUtils.copyProperties(user, userEntity);
-        userDetailEntity.setUser(userEntity);
         userEntity.setUserDetail(userDetailEntity);
         userRepository.save(userEntity);
-        userDetailRepository.save(userDetailEntity);
         return user;
     }
 
@@ -61,14 +59,33 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(Long id, User user) {
         UserEntity userEntity = userRepository.findById(id).get();
+        UserDetailEntity userDetailEntity = userDetailRepository.findByEmail(userEntity.getUserDetail().getEmail());
+        BeanUtils.copyProperties(user.getUserDetail(), userDetailEntity, "id");
         userEntity.setAvatar(user.getAvatar());
         userEntity.setRole(user.getRole());
         userEntity.setFirstName(user.getFirstName());
         userEntity.setLastName(user.getLastName());
-        userEntity.setUserDetail(user.getUserDetail());
         userEntity.setReList(user.getReList());
+        userDetailRepository.save(userDetailEntity);
         userRepository.save(userEntity);
         return user;
+    }
+
+    @Override
+    public User findByEmail(String searchTerm) {
+        UserEntity userEntity = userRepository.findByEmail(searchTerm);
+        User user = new User();
+        BeanUtils.copyProperties(userEntity, user);
+        return user;
+
+    }
+    @Override
+    public User findByPhoneNumber(String searchTerm) {
+        UserEntity userEntity = userRepository.findByPhoneNumber(searchTerm);
+        User user = new User();
+        BeanUtils.copyProperties(userEntity, user);
+        return user;
+
     }
 
 

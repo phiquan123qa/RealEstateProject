@@ -1,5 +1,6 @@
 package com.vn.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,11 +18,18 @@ public class RealEstateEntity {
     @Lob
     @Column(name = "mainImage", columnDefinition = "BLOB")
     private byte[] mainImage;
-    @OneToOne(mappedBy = "realEstate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_red_id")
+    @JsonBackReference
     private RealEstateDetailEntity realEstateDetail;
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private UserEntity owner;
-    @OneToMany(mappedBy = "realEstate")
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_re_id", referencedColumnName = "id")
     private List<UserLikeEntity> reList;
 }

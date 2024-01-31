@@ -15,13 +15,12 @@ public class UserDetail {
     private String ward;
     private Integer point;
     private Boolean status;
-    private UserEntity user;
     public UserDetail() {
     }
 
     public UserDetail(Long id, LocalDate dob, Long phoneNumber,
                       String email, String city, String district, String ward,
-                      Integer point, Boolean status, UserEntity user) {
+                      Integer point, Boolean status) {
         this.id = id;
         this.dob = dob;
         this.phoneNumber = phoneNumber;
@@ -31,6 +30,5 @@ public class UserDetail {
         this.ward = ward;
         this.point = point;
         this.status = status;
-        this.user = user;
     }
 }

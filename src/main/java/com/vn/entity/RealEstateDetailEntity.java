@@ -22,7 +22,4 @@ public class RealEstateDetailEntity {
     private String status;
     private Double latitude;
     private Double longitude;
-    @OneToOne
-    @JoinColumn(name = "re_id")
-    private RealEstateEntity realEstate;
 }

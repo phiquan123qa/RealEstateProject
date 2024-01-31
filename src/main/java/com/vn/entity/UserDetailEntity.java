@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class UserDetailEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ud_id")
     private Long id;
     private LocalDate dob;
     @Size(min = 10, max = 13)
@@ -26,7 +27,4 @@ public class UserDetailEntity {
     private String ward;
     private Integer point;
     private Boolean status;
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
 }
