@@ -72,20 +72,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByEmail(String searchTerm) {
-        UserEntity userEntity = userRepository.findByEmail(searchTerm);
-        User user = new User();
-        BeanUtils.copyProperties(userEntity, user);
-        return user;
-
-    }
-    @Override
-    public User findByPhoneNumber(String searchTerm) {
-        UserEntity userEntity = userRepository.findByPhoneNumber(searchTerm);
-        User user = new User();
-        BeanUtils.copyProperties(userEntity, user);
-        return user;
-
+    public Optional<User> findByEmail(String searchTerm) {
+        return userRepository.findByEmail(searchTerm)
+                .map(userEntity -> {
+                    User user = new User();
+                    BeanUtils.copyProperties(userEntity, user);
+                    return user;
+                });
     }
 
 

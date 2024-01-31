@@ -2,13 +2,8 @@ package com.vn.model;
 
 import com.vn.entity.UserDetailEntity;
 import com.vn.entity.UserLikeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.util.List;
 
 @Data

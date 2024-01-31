@@ -1,6 +1,5 @@
 package com.vn.model;
 
-import com.vn.entity.UserEntity;
 import lombok.Data;
 import java.time.LocalDate;
 

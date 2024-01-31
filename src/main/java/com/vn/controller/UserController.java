@@ -1,8 +1,6 @@
 package com.vn.controller;
 
-import com.vn.entity.UserEntity;
 import com.vn.model.User;
-import com.vn.model.UserDetail;
 import com.vn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,25 +37,11 @@ public class UserController {
 
     @GetMapping("/user/search/{searchTerm}")
     public ResponseEntity<User> getUserByEmail(@PathVariable("searchTerm") String searchTerm) {
-        User user1 = null;
-        User user2 = null;
-        try{
-            user1 = userService.findByEmail(searchTerm);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        try{
-            user2 = userService.findByPhoneNumber(searchTerm);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        if (user1 != null) {
-            return ResponseEntity.ok(user1);
-        } else if (user2 != null) {
-            return ResponseEntity.ok(user2);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Optional<User> userByEmail = userService.findByEmail(searchTerm);
+
+        return userByEmail
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/user/update/{id}")
