@@ -5,7 +5,9 @@ import com.vn.entity.UserEntity;
 import com.vn.model.User;
 import com.vn.repository.UserDetailRepository;
 import com.vn.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
+        if (userRepository.existsByUserDetail_Email(user.getUserDetail().getEmail())) {
+            throw new DuplicateKeyException("User with the same email already exists");
+        }
         UserEntity userEntity = new UserEntity();
         UserDetailEntity userDetailEntity = new UserDetailEntity();
         BeanUtils.copyProperties(user.getUserDetail(), userDetailEntity);
@@ -35,40 +40,59 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        List<UserEntity> userEntities = userRepository.findAll();
-        return userEntities
-                .stream()
-                .map(userEntity -> new User(userEntity.getId(),
-                        userEntity.getFirstName(),
-                        userEntity.getLastName(),
-                        userEntity.getAvatar(),
-                        userEntity.getRole(),
-                        userEntity.getUserDetail(),
-                        userEntity.getReList()))
-                .collect(Collectors.toList());
+        try {
+            List<UserEntity> userEntities = userRepository.findAll();
+            return userEntities
+                    .stream()
+                    .map(userEntity -> new User(userEntity.getId(),
+                            userEntity.getFirstName(),
+                            userEntity.getLastName(),
+                            userEntity.getAvatar(),
+                            userEntity.getRole(),
+                            userEntity.getUserDetail(),
+                            userEntity.getReList()))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving users", e);
+        }
     }
 
     @Override
     public User getUserById(Long id) {
-        UserEntity userEntity = userRepository.findById(id).get();
-        User user = new User();
-        BeanUtils.copyProperties(userEntity, user);
-        return user;
+        Optional<UserEntity> userEntityOptional = userRepository.findById(id);
+        if (userEntityOptional.isPresent()) {
+            UserEntity userEntity = userEntityOptional.get();
+            User user = new User();
+            BeanUtils.copyProperties(userEntity, user);
+            return user;
+        } else {
+            throw new EntityNotFoundException("User not found");
+        }
     }
 
     @Override
     public User updateUser(Long id, User user) {
-        UserEntity userEntity = userRepository.findById(id).get();
-        UserDetailEntity userDetailEntity = userDetailRepository.findByEmail(userEntity.getUserDetail().getEmail());
-        BeanUtils.copyProperties(user.getUserDetail(), userDetailEntity, "id");
-        userEntity.setAvatar(user.getAvatar());
-        userEntity.setRole(user.getRole());
-        userEntity.setFirstName(user.getFirstName());
-        userEntity.setLastName(user.getLastName());
-        userEntity.setReList(user.getReList());
-        userDetailRepository.save(userDetailEntity);
-        userRepository.save(userEntity);
-        return user;
+        try {
+            UserEntity userEntity = userRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+            UserDetailEntity userDetailEntity = userEntity.getUserDetail();
+            if (userDetailEntity == null) {
+                throw new EntityNotFoundException("User detail not found for user with id: " + id);
+            }
+
+            BeanUtils.copyProperties(user, userEntity, "id", "userDetail", "reList");
+            BeanUtils.copyProperties(user.getUserDetail(), userDetailEntity, "id");
+
+            userDetailRepository.save(userDetailEntity);
+            userRepository.save(userEntity);
+
+            return user;
+        } catch (EntityNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating user with id: " + id, e);
+        }
     }
 
     @Override
@@ -77,8 +101,9 @@ public class UserServiceImpl implements UserService {
                 .map(userEntity -> {
                     User user = new User();
                     BeanUtils.copyProperties(userEntity, user);
-                    return user;
-                });
+                    return Optional.of(user);
+                })
+                .orElse(Optional.empty());
     }
 
 

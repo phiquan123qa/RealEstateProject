@@ -2,7 +2,10 @@ package com.vn.controller;
 
 import com.vn.model.User;
 import com.vn.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,33 +23,57 @@ public class UserController {
     }
 
     @PostMapping("/user/add")
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        try {
+            User createdUser = userService.createUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        } catch (DuplicateKeyException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User with the same email already exists");
+        }
     }
-
     @GetMapping("/user/users")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } else {
+            return ResponseEntity.ok(users);
+        }
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
-        User user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<?> getUserById(@PathVariable("id") Long id) {
+        try {
+            User user = userService.getUserById(id);
+            return ResponseEntity.ok(user);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        }
     }
 
     @GetMapping("/user/search/{searchTerm}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable("searchTerm") String searchTerm) {
-        Optional<User> userByEmail = userService.findByEmail(searchTerm);
-
-        return userByEmail
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> getUserByEmail(@PathVariable("searchTerm") String searchTerm) {
+        try {
+            Optional<User> userByEmail = userService.findByEmail(searchTerm);
+            return userByEmail
+                    .map(user -> ResponseEntity.ok((Object) user))
+                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        }
     }
 
     @PutMapping("/user/update/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
-        user = userService.updateUser(id, user);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
+        try {
+            User updatedUser = userService.updateUser(id, user);
+            return ResponseEntity.ok(updatedUser);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with id: " + id);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user with id: " + id);
+        }
     }
 }

@@ -1,9 +1,14 @@
 package com.vn.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDetail {
     private Long id;
     private LocalDate dob;
@@ -14,20 +19,5 @@ public class UserDetail {
     private String ward;
     private Integer point;
     private Boolean status;
-    public UserDetail() {
-    }
 
-    public UserDetail(Long id, LocalDate dob, Long phoneNumber,
-                      String email, String city, String district, String ward,
-                      Integer point, Boolean status) {
-        this.id = id;
-        this.dob = dob;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.city = city;
-        this.district = district;
-        this.ward = ward;
-        this.point = point;
-        this.status = status;
-    }
 }

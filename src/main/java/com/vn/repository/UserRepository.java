@@ -12,6 +12,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("SELECT u FROM user u JOIN u.userDetail ud WHERE ud.email = :searchTerm")
     Optional<UserEntity> findByEmail(@Param("searchTerm") String email);
-    @Query("SELECT u FROM user u JOIN u.userDetail ud WHERE ud.phoneNumber = :searchTerm")
-    Optional<UserEntity> findByPhoneNumber(@Param("searchTerm") String phoneNumber);
+    boolean existsByUserDetail_Email(String email);
 }
