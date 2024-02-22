@@ -2,11 +2,15 @@ package com.vn.model;
 
 import com.vn.entity.UserDetailEntity;
 import com.vn.entity.UserLikeEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     private Long id;
     private String firstName;
@@ -15,17 +19,4 @@ public class User {
     private String role;
     private UserDetailEntity userDetail;
     private List<UserLikeEntity> reList;
-
-    public User(Long id, String firstName, String lastName, String avatar, String role, UserDetailEntity userDetail, List<UserLikeEntity> reList) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.avatar = avatar;
-        this.role = role;
-        this.userDetail = userDetail;
-        this.reList = reList;
-    }
-
-    public User() {
-    }
 }

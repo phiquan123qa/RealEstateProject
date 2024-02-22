@@ -19,8 +19,7 @@ public class RealEstateEntity {
     @Column(name = "mainImage", columnDefinition = "BLOB")
     private byte[] mainImage;
 
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_red_id")
     @JsonBackReference
     private RealEstateDetailEntity realEstateDetail;

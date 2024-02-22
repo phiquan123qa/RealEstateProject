@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private final UserService userService;
@@ -22,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/user/add")
+    @PostMapping("/add")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
             User createdUser = userService.createUser(user);
@@ -31,7 +31,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User with the same email already exists");
         }
     }
-    @GetMapping("/user/users")
+    @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         if (users.isEmpty()) {
@@ -41,7 +41,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") Long id) {
         try {
             User user = userService.getUserById(id);
@@ -53,7 +53,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/search/{searchTerm}")
+    @GetMapping("/search/{searchTerm}")
     public ResponseEntity<?> getUserByEmail(@PathVariable("searchTerm") String searchTerm) {
         try {
             Optional<User> userByEmail = userService.findByEmail(searchTerm);
@@ -65,7 +65,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
         try {
             User updatedUser = userService.updateUser(id, user);

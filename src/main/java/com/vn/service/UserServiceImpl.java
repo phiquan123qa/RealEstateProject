@@ -44,7 +44,8 @@ public class UserServiceImpl implements UserService {
             List<UserEntity> userEntities = userRepository.findAll();
             return userEntities
                     .stream()
-                    .map(userEntity -> new User(userEntity.getId(),
+                    .map(userEntity -> new User(
+                            userEntity.getId(),
                             userEntity.getFirstName(),
                             userEntity.getLastName(),
                             userEntity.getAvatar(),
