@@ -9,4 +9,13 @@ public class HomeController {
     public String home() {
         return "home";
     }
+
+    @GetMapping("/signin")
+    public String login(){ return "signin"; }
+
+    @GetMapping("/signup")
+    public String signup(){ return "signup"; }
+
+    @GetMapping("/recover_account")
+    public String recover_account(){ return "recoverAcc"; }
 }

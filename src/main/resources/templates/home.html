@@ -2,10 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Real Estate Home</title>
+    <link rel="stylesheet" href="output.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var button = document.querySelector('.hs-collapse-toggle');
+            var target = document.querySelector(button.getAttribute('data-hs-collapse'));
+            var openIcon = button.querySelector('.hs-collapse-open');
+            var closeIcon = button.querySelector('.hs-collapse-close');
+
+            button.addEventListener('click', function () {
+                if (target.offsetWidth === 0 && target.offsetHeight === 0) {
+                    target.style.display = 'block';
+                    openIcon.style.display = 'none';
+                    closeIcon.style.display = 'block';
+                } else {
+                    target.style.display = 'none';
+                    openIcon.style.display = 'block';
+                    closeIcon.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </head>
 <body>
-<h1>HEllooooooo</h1>
-
+<div th:include = "components/navbar :: navbar"></div>
 </body>
 </html>
