@@ -1,26 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Real Estate Home</title>
-    <link rel="stylesheet" href="output.css">
-    <link rel="stylesheet" href="flowbite.min.css">
-</head>
-<body class="bg-gray-50 dark:bg-slate-900">
-
-    <div th:include = "components/navbar :: navbar"></div>
-    <div th:include = "components/searchInput :: searchInput"></div>
-    <div id="listCardRE" class="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 gap-4 lg:px-6 sm:px-4 py-6"></div>
-    <div th:include = "components/footer :: footer"></div>
-    <script src="flowbite.min.js"></script>
-<script rel="script">
-    document.addEventListener("DOMContentLoaded", function() {
-        fetch('/api/re/res')
-            .then(response => response.json())
-            .then(res => {
-                const resListDiv = document.getElementById("listCardRE");
-                resListDiv.innerHTML = res.map(re =>
-                `<div class="relative flex w-full max-w-md flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg mx-4">
+<div th:fragment="card_section">
+    <div class="relative flex w-full max-w-md flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg mx-4">
         <div class="relative mx-4 mt-4 overflow-hidden text-white shadow-lg rounded-xl bg-blue-gray-500 bg-clip-border shadow-blue-gray-500/40">
             <img src="https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1470&amp;q=80"
                  alt="ui/ux review check"/>
@@ -37,7 +16,7 @@
         <div class="p-6">
             <div class="flex items-center justify-between mb-3">
                 <h5 class="block font-sans text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900">
-                    ${re.title}
+                    Wooden House, Florida
                 </h5>
                 <p class="flex items-center gap-1.5 font-sans text-base font-normal leading-relaxed text-blue-gray-900 antialiased">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -50,10 +29,11 @@
                 </p>
             </div>
             <p class="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                ${re.realEstateDetail.description}
+                Enter a freshly updated and thoughtfully furnished peaceful home
+                surrounded by ancient trees, stone walls, and open meadows.
             </p>
             <h5 class="block font-sans text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900 mt-2">
-                ${re.price}$
+                900$
             </h5>
             <div class="inline-flex flex-wrap items-center gap-3 mt-6 group">
       <span class="cursor-pointer rounded-full border border-gray-900/5 bg-gray-900/5 p-3 text-gray-900 transition-colors hover:border-gray-900/10 hover:bg-gray-900/10 hover:!opacity-100 group-hover:opacity-70">
@@ -107,9 +87,5 @@
                 Reserve
             </button>
         </div>
-    </div>`).join('')})
-            .catch(error => console.error('Error fetching res:', error));
-    });
-</script>
-</body>
-</html>
+    </div>
+</div>
