@@ -18,4 +18,16 @@ public class HomeController {
 
     @GetMapping("/recover_account")
     public String recover_account(){ return "recoverAcc"; }
+
+    @GetMapping("/buy")
+    public String REbuy(){ return "REbuy"; }
+
+    @GetMapping("/rent")
+    public String RErent(){ return "RErent"; }
+
+    @GetMapping("/wiki")
+    public String REwiki(){ return "REwiki"; }
+
+    @GetMapping("/ab")
+    public String REab(){ return "REab"; }
 }
