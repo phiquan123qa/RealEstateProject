@@ -7,13 +7,12 @@
     <link rel="stylesheet" href="flowbite.min.css">
 </head>
 <body class="bg-gray-50 dark:bg-slate-900">
-
     <div th:include = "components/navbar :: navbar"></div>
     <div th:include = "components/searchInput :: searchInput"></div>
     <div id="listCardRE" class="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 gap-4 lg:px-6 sm:px-4 py-6"></div>
     <div th:include = "components/footer :: footer"></div>
     <script src="flowbite.min.js"></script>
-<script rel="script">
+    <script rel="script">
     document.addEventListener("DOMContentLoaded", function() {
         fetch('/api/re/res')
             .then(response => response.json())
