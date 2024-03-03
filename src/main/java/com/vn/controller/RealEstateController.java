@@ -1,6 +1,6 @@
 package com.vn.controller;
 
-import com.vn.model.RealEstate;
+import com.vn.entity.RealEstate;
 import com.vn.service.RealEstateService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/re")
 public class RealEstateController {

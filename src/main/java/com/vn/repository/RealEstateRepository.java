@@ -1,15 +1,12 @@
 package com.vn.repository;
 
-import com.vn.entity.RealEstateEntity;
-import com.vn.model.RealEstate;
+
+import com.vn.entity.RealEstate;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-public interface RealEstateRepository extends JpaRepository<RealEstateEntity, Long> {
-    List<RealEstate> getAllByTitleContaining(String title);
-
+@Repository
+public interface RealEstateRepository extends JpaRepository<RealEstate, Long> {
     List<RealEstate> findAllByTitleContaining(String title);
-
-
 }
