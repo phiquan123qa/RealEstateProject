@@ -33,7 +33,7 @@ public class SecurityConfig {
                                 ,"/", "/login", "/logout"
                                 , "/signup","/api/re/**","/static/**",
                                 "/properties", "/services", "/about",
-                                "/contact", "/property_single").permitAll()
+                                "/wiki", "/property_single").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("USER")
                         .anyRequest().authenticated())
