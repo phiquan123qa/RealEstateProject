@@ -71,15 +71,15 @@
                                     <h3>Sign In to <strong>Colorlib</strong></h3>
                                     <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>
                                 </div>
-                                <form action="#" method="post">
+                                <form id="loginForm">
                                     <div class="form-group first mb-4">
                                         <label for="username">Username</label>
-                                        <input type="text" class="form-control" id="username">
+                                        <input type="text" class="form-control" id="username" name="email">
 
                                     </div>
                                     <div class="form-group last mb-4">
                                         <label for="password">Password</label>
-                                        <input type="password" class="form-control" id="password">
+                                        <input type="password" class="form-control" id="password" name="password">
 
                                     </div>
 
@@ -135,5 +135,73 @@
 <script src="/static/js/navbar.js"></script>
 <script src="/static/js/counter.js"></script>
 <script src="/static/js/custom.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#loginForm').on('submit', function(e) {
+            e.preventDefault(); // ngăn chặn việc submit form theo cách thông thường
+
+            // Lấy dữ liệu từ các input của form
+            var email = $('#username').val();
+            var password = $('#password').val();
+
+            // Tạo đối tượng data để gửi
+            var data = {
+                "email": email,
+                "password": password
+            };
+
+            // Sử dụng jQuery ajax để gửi request
+            $.ajax({
+                type: 'POST',
+                url: '/auth/signin',
+                contentType: 'application/json', // loại dữ liệu gửi đi là JSON
+                data: JSON.stringify(data), // chuyển đổi đối tượng JavaScript thành chuỗi JSON
+                success: function(response) {
+                    // đoạn này để xử lý khi kết quả trả về thành công
+                    sessionStorage.setItem('access-token', response.token);
+                    console.log('Login success', response);
+                    console.log(sessionStorage.getItem('access-token'))
+                    makeHttpCall('/admin/users');
+                },
+                error: function(error) {
+                    // đoạn này để xử lý khi có lỗi xảy ra
+                    console.log('Error logging in', error);
+                }
+            });
+            async function makeHttpCall(url) {
+                try {
+                    // Retrieve the token from local storage
+                    const token = sessionStorage.getItem('access-token');
+
+                    // Check if the token exists
+                    if (!token) {
+                        throw new Error("Authorization token not found in local storage.");
+                    }
+
+                    // Make the HTTP call with the Authorization header
+                    const response = await fetch(url, {
+                        method: 'GET', // or 'POST', 'PUT', 'DELETE', etc.
+                        headers: {
+                            'Authorization': `Bearer ${token}`, // Include the token in the 'Authorization' header
+                            'Content-Type': 'application/json' // Assuming the server expects JSON. Adjust if needed.
+                        }
+                    });
+
+                    // Check if the response was successful
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    return await response.json();
+
+                } catch (error) {
+                    console.error("Error during HTTP call:", error.message);
+                    throw error; // Rethrow the error for further handling if needed
+                }
+            }
+        });
+    });
+
+</script>
 </body>
 </html>

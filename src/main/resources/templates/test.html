@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="/static/jquery/jquery-3.7.1.js"></script>
+<script>
+    $(document).ready(function() {
+        const token = sessionStorage.getItem('access-token');
+        $.ajax({
+                type: 'GET',
+                url: '/auth/users',
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                beforeSend : function( xhr ) {
+                    xhr.setRequestHeader( "Authorization", "Bearer " + token );
+                },
+                success: function(response) {
+                    console.log('Login success', response);
+                },
+                error: function(error) {
+                    console.log('Error logging in', error);
+                }
+            });
+    });
+</script>
+</body>
+</html>

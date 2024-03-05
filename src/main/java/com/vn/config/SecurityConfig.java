@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,14 +34,19 @@ public class SecurityConfig {
                                 ,"/", "/login", "/logout"
                                 , "/signup","/api/re/**","/static/**",
                                 "/properties", "/services", "/about",
-                                "/wiki", "/property_single").permitAll()
+                                "/wiki", "/property_single", "/signin").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("USER")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
-                );
+                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+//                .logout(httpSecurityLogoutConfigurer ->
+//                        httpSecurityLogoutConfigurer.logoutUrl("auth/logout")
+//                                .logoutSuccessHandler((request, response, authentication) ->
+//                                        SecurityContextHolder.clearContext())
+//                                .clearAuthentication(true)
+//                                .permitAll());
         return httpSecurity.build();
     }
     @Bean

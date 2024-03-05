@@ -4,6 +4,9 @@ import com.vn.dto.ReqRes;
 import com.vn.entity.User;
 import com.vn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,11 +62,14 @@ public class AuthService {
             System.out.println("USER IS: " + user);
             var jwt = jwtUtils.generateToken(user);
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " +     jwt);
             resp.setStatusCode(200);
             resp.setToken(jwt);
             resp.setRefreshToken(refreshToken);
             resp.setExpirationTime("24Hr");
             resp.setMessage("Successfully Signed In");
+            resp.setHeaders(headers);
         }catch (Exception e){
             resp.setStatusCode(500);
             resp.setError(e.getMessage());

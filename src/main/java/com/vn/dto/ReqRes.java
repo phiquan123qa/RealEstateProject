@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vn.entity.RealEstate;
 import com.vn.entity.User;
 import lombok.Data;
+import org.springframework.http.HttpHeaders;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +21,7 @@ public class ReqRes {
     private String token;
     private String refreshToken;
     private String expirationTime;
+    private HttpHeaders headers;
     //Create user
     private String name;
     private String email;
