@@ -33,7 +33,7 @@ public class HomeController {
     public String login() {
         return "login";
     }
-    @GetMapping("/admin/list_user")
+    @GetMapping("/admin/home_manager")
     public String list_user() {
         return "test";
     }

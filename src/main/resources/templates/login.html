@@ -138,70 +138,57 @@
 <script>
     $(document).ready(function() {
         $('#loginForm').on('submit', function(e) {
-            e.preventDefault(); // ngăn chặn việc submit form theo cách thông thường
-
-            // Lấy dữ liệu từ các input của form
-            var email = $('#username').val();
-            var password = $('#password').val();
-
-            // Tạo đối tượng data để gửi
+            e.preventDefault(); // Prevent the default form submission behavior
             var data = {
-                "email": email,
-                "password": password
+                "email": $('#username').val(),
+                "password": $('#password').val()
             };
-
-            // Sử dụng jQuery ajax để gửi request
             $.ajax({
                 type: 'POST',
                 url: '/auth/signin',
-                contentType: 'application/json', // loại dữ liệu gửi đi là JSON
-                data: JSON.stringify(data), // chuyển đổi đối tượng JavaScript thành chuỗi JSON
+                contentType: 'application/json',
+                data: JSON.stringify(data),
                 success: function(response) {
-                    // đoạn này để xử lý khi kết quả trả về thành công
-                    sessionStorage.setItem('access-token', response.token);
+                    localStorage.setItem('access-token', response.token);
                     console.log('Login success', response);
-                    console.log(sessionStorage.getItem('access-token'))
-                    makeHttpCall('/admin/users');
+                    // $.ajax({
+                    //     method: 'GET',
+                    //     url: '/admin/users',
+                    //     headers: {
+                    //         'Authorization': 'Bearer ' + localStorage.getItem('access-token') // Include the token with Bearer prefix
+                    //     },
+                    //     success: function(userData) {
+                    //         console.log('User data:', userData);
+                    //         // Handle user data here
+                    //     },
+                    //     error: function(xhr, status, error) {
+                    //         console.log('Error fetching user data:', error);
+                    //     }
+                    // });
                 },
                 error: function(error) {
-                    // đoạn này để xử lý khi có lỗi xảy ra
                     console.log('Error logging in', error);
                 }
             });
-            async function makeHttpCall(url) {
-                try {
-                    // Retrieve the token from local storage
-                    const token = sessionStorage.getItem('access-token');
-
-                    // Check if the token exists
-                    if (!token) {
-                        throw new Error("Authorization token not found in local storage.");
-                    }
-
-                    // Make the HTTP call with the Authorization header
-                    const response = await fetch(url, {
-                        method: 'GET', // or 'POST', 'PUT', 'DELETE', etc.
-                        headers: {
-                            'Authorization': `Bearer ${token}`, // Include the token in the 'Authorization' header
-                            'Content-Type': 'application/json' // Assuming the server expects JSON. Adjust if needed.
-                        }
-                    });
-
-                    // Check if the response was successful
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    return await response.json();
-
-                } catch (error) {
-                    console.error("Error during HTTP call:", error.message);
-                    throw error; // Rethrow the error for further handling if needed
-                }
-            }
+            window.location.href = '/';
         });
     });
 
+    async function makeHttpCall(url) {
+        $.ajax({
+            type: "GET",
+            url : "/admin/users",
+            beforeSend : function (xhr){
+                xhr.setRequestHeader('Authorization', localStorage.getItem('access-token'));
+            },
+            success : function (result){
+                console.log(result);
+            },
+            error: function(result){
+                console.log(result);
+            }
+        })
+    }
 </script>
 </body>
 </html>

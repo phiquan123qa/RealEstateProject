@@ -33,24 +33,7 @@ public class UserService implements UserDetailsService {
 
     public List<User> getAllUsers() {
         try {
-            List<User> userEntities = userRepository.findAll();
-            return userEntities;
-//                    .stream()
-//                    .map(user -> new User(
-//                            user.getId(),
-//                            user.getName(),
-//                            user.getEmail(),
-//                            user.getAvatar(),
-//                            user.getPassword(),
-//                            user.getDob(),
-//                            user.getPhoneNumber(),
-//                            user.getCity(),
-//                            user.getDistrict(),
-//                            user.getWard(),
-//                            user.getPoint(),
-//                            user.getStatus(),
-//                            user.getRole())
-//                    .collect(Collectors.toList()));
+            return userRepository.findAll();
         } catch (Exception e) {
             throw new RuntimeException("Error retrieving users", e);
         }
